@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # === TTS 核心引擎 (服务端) ===
+  gpt-sovits-bot:
+    image: xxxxrt666/gpt-sovits:latest-cu128
+    container_name: gpt_sovits_bot
+    ports:
+      - "9880:9880"
+    volumes:
+      - .:/workspace/GPT-SoVITS
+    environment:
+      - is_half=True
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    working_dir: /workspace/GPT-SoVITS
+    command: python api_v2.py -a 0.0.0.0 -p 9880 -c GPT_SoVITS/configs/tts_infer.yaml
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
+  # === WebUI 界面 (客户端) ===
+  webui:
+    build: 
+      context: .
+      dockerfile: Dockerfile.webui
+    container_name: ai_waifu_webui
+    ports:
+      - "7860:7860"
+    volumes:
+      - .:/app
+      - ./cache/huggingface:/root/.cache/huggingface 
+    environment:
+      - TTS_API_URL=http://gpt-sovits-bot:9880 
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    depends_on:
+      - gpt-sovits-bot
+    restart: unless-stopped
