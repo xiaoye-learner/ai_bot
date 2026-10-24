@@ -11,7 +11,7 @@ from colorama import Fore, Style, init
 # ================= 配置区域 =================
 
 # 1. DeepSeek API 配置
-DEEPSEEK_API_KEY = ""
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "")
 DEEPSEEK_BASE_URL = "https://api.deepseek.com"
 
 # 2. GPT-SoVITS 服务端配置

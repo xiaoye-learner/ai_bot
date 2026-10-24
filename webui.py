@@ -10,7 +10,7 @@ from faster_whisper import WhisperModel
 from openai import OpenAI
 
 # ================= 配置区域 =================
-DEEPSEEK_API_KEY = "" 
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "")
 DEEPSEEK_BASE_URL = "https://api.deepseek.com"
 TTS_API_URL = os.getenv("TTS_API_URL", "http://gpt-sovits-bot:9880")
 os.environ["no_proxy"] = "localhost,127.0.0.1"    # 本地不走代理
